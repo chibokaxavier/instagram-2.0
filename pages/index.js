@@ -9,7 +9,7 @@ const inter = Inter({ subsets: ["latin"] });
 export default function Home() {
   return (
     <>
-      <div className=" ">
+      <div className="bg-gray-50 min-h-screen overflow-y-scroll scrollbar-hide ">
         <Head>
           <title> Instagram </title>
         </Head>
