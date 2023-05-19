@@ -18,7 +18,7 @@ const Header = () => {
         <div className="relative w-24 h-24  items-center hidden lg:inline-grid cursor-pointer">
           <Image
             src="https://links.papareact.com/ocw"
-            alt=""
+            alt="img"
             fill
             style={{ objectFit: "contain" }}
           />
@@ -26,7 +26,7 @@ const Header = () => {
         <div className="relative w-10 lg:hidden items-center  flex-shrink-0 cursor-pointer">
           <Image
             src="https://links.papareact.com/jjm"
-            alt=""
+            alt="img"
             fill
             style={{ objectFit: "contain" }}
           />
@@ -63,7 +63,7 @@ const Header = () => {
           <div className="h-10 rounded-full">
             <img
               src="https://cdn.pixabay.com/photo/2023/05/01/06/19/penguin-7962192__340.jpg"
-              alt=""
+              alt="img"
               className="rounded-full w-10 h-full cursor-pointer"
             />
           </div>
