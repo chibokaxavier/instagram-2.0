@@ -21,7 +21,7 @@ const Post = ({ img, userImg, username, caption }) => {
           className="rounded-full  border h-12 w-12  p-1 mr-3 "
           alt="img"
         />
-        <p className="flex-1 font-bold">{username}</p>
+        <p className="flex-1 font-bold">{session?.user?.username}</p>
         <DotsHorizontalIcon className="h-5" />
       </div>
       {/* image */}
@@ -31,7 +31,10 @@ const Post = ({ img, userImg, username, caption }) => {
         <div className="flex space-x-4">
           <HeartIcon className="btn" />
           <ChatIcon className="btn" />
+          <div className="rotate-45">
           <PaperAirplaneIcon className="btn" />
+          </div>
+         
         </div>
         <BookmarkIcon className="btn" />
       </div>

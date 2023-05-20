@@ -10,14 +10,16 @@ import {
 } from "@heroicons/react/outline";
 import { HomeIcon } from "@heroicons/react/solid";
 import { signIn, signOut, useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 
 const Header = () => {
+    const router = useRouter()
   const { data: session } = useSession();
   return (
     <div className="shadow-sm border-b bg-white sticky z-50 top-0 ">
       <div className="flex justify-between max-w-6xl mx-5 lg:mx-auto">
         {/* left */}
-        <div className="relative w-24 h-24  items-center hidden lg:inline-grid cursor-pointer">
+        <div className="relative w-24 h-24  items-center hidden lg:inline-grid cursor-pointer" onClick={()=> router.push('/')}>
           <Image
             src="https://links.papareact.com/ocw"
             alt="img"
@@ -25,7 +27,7 @@ const Header = () => {
             style={{ objectFit: "contain" }}
           />
         </div>
-        <div className="relative w-10 lg:hidden items-center  flex-shrink-0 cursor-pointer">
+        <div className="relative w-10 lg:hidden items-center  flex-shrink-0 cursor-pointer" onClick={()=> router.push('/')}>
           <Image
             src="https://links.papareact.com/jjm"
             alt="img"
@@ -50,7 +52,7 @@ const Header = () => {
 
         {/* right */}
         <div className="flex justify-end items-center space-x-4 ">
-          <HomeIcon className="navBtn" />
+          <HomeIcon className="navBtn" onClick={()=> router.push('/')} />
           <MenuIcon className="h-6 md:hidden cursor-pointer" />
 
 {session? (
