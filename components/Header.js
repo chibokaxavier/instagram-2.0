@@ -9,7 +9,7 @@ import {
   MenuIcon,
 } from "@heroicons/react/outline";
 import { HomeIcon } from "@heroicons/react/solid";
-import { signIn, useSession } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 
 const Header = () => {
   const { data: session } = useSession();
@@ -70,7 +70,7 @@ const Header = () => {
  <img
    src={session.user.image}
    alt="img"
-   className="rounded-full w-10 h-full cursor-pointer"
+   className="rounded-full w-10 h-full cursor-pointer" onClick={signOut}
  />
 </div>
 </>
