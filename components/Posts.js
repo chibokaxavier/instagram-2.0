@@ -30,7 +30,7 @@ const DUMMY_DATA = [
     username: "manlikexavy",
     img: faker.image.avatar(),
     userImg: faker.image.avatar(),
-    caption: " Hello how are ypou doing today hope you are oaky.",
+    caption: "asdfghjkl;",
   },
 ];
 
