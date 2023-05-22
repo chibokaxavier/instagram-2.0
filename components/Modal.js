@@ -13,15 +13,16 @@ import {
 } from "firebase/firestore";
 import { useSession } from "next-auth/react";
 import { ref, getDownloadURL, uploadString } from "@firebase/storage";
+import Spinner from "./Spinner";
 
 const Modal = () => {
   const { data: session } = useSession();
   const [open, setOpen] = useRecoilState(modalState);
   const [selectedFile, setSelectedFile] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const filePickerRef = useRef(null);
   const captionRef = useRef(null);
-  const isDisabled= loading || !selectedFile
+  const isDisabled = loading || !selectedFile;
 
   const uploadPost = async () => {
     if (loading) return;
@@ -143,16 +144,11 @@ const Modal = () => {
                 <div className="mt-5 sm:mt-6">
                   <button
                     type="button"
-                    disabled={!selectedFile||loading}
-                    
+                    disabled={!selectedFile || loading}
                     className="inline-flex justify-center w-full rounded-md border border-tranparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:text-sm disabled:bg-gray-300  disabled:cursor-not-allowed hover:disabled:bg-gray-300"
                     onClick={uploadPost}
                   >
-                    {loading ? (
-                     
-                    ) : (
-                      "Upload Post"
-                    )}
+                    {loading ? <Spinner /> : "Upload Post"}
                   </button>
                 </div>
               </div>

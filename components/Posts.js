@@ -1,49 +1,35 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Post from "./Post";
 
 import { faker } from "@faker-js/faker";
-
-const DUMMY_DATA = [
-  {
-    id: 0,
-    username: "manlikexavy",
-    img: faker.image.avatar(),
-    userImg: faker.image.avatar(),
-    caption: " Hello how are ypou doing today hope you are oaky.",
-  },
-  {
-    id: 1,
-    username: "manlikexavy",
-    img: faker.image.avatar(),
-    userImg: faker.image.avatar(),
-    caption: " Hello how are ypou doing today hope you are oaky.",
-  },
-  {
-    id: 12,
-    username: "manlikexavy",
-    img: faker.image.avatar(),
-    userImg: faker.image.avatar(),
-    caption: " Hello how are ypou doing today hope you are oaky.",
-  },
-  {
-    id: 123,
-    username: "manlikexavy",
-    img: faker.image.avatar(),
-    userImg: faker.image.avatar(),
-    caption: "asdfghjkl;",
-  },
-];
+import { db } from "@/firebase";
+import { collection, onSnapshot, orderBy, query } from "@firebase/firestore";
 
 const Posts = () => {
+  const [posts, setPosts] = useState([]);
+  useEffect(
+    () =>
+      onSnapshot(
+        query(collection(db, "posts"), orderBy("timestamp", "desc")),
+        (snapshot) => {
+          const post = snapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+          setPosts(post);
+        }
+      ),
+    [db]
+  );
   return (
     <div>
-      {DUMMY_DATA.map((data) => (
+      {posts.map((post) => (
         <Post
-          key={data.id}
-          username={data.username}
-          img={data.img}
-          userImg={data.userImg}
-          caption={data.caption}
+          key={post.id}
+          username={post.username}
+          img={post.image}
+          userImg={post.profileImg}
+          caption={post.caption}
         />
       ))}
     </div>
