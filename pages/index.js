@@ -5,7 +5,6 @@ import Header from "@/components/Header";
 import Feed from "@/components/Feed";
 import Modal from "@/components/Modal";
 
-
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
@@ -17,7 +16,7 @@ export default function Home() {
         </Head>
         <Header />
         <Feed />
-       <Modal/>
+        <Modal />
       </div>
     </>
   );

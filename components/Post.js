@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   BookmarkIcon,
   ChatIcon,
@@ -9,9 +9,56 @@ import {
 } from "@heroicons/react/outline";
 import { HeartIcon as HeartIconFilled } from "@heroicons/react/solid";
 import { useSession } from "next-auth/react";
+import {
+  addDoc,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  onSnapshot,
+  orderBy,
+  query,
+  serverTimestamp,
+} from "@firebase/firestore";
+import { db } from "@/firebase";
+import Comment from "./Comment";
 
-const Post = ({ img, userImg, username, caption }) => {
+const Post = ({ id, img, userImg, username, caption }) => {
   const { data: session } = useSession();
+  const [comments, setComments] = useState([]);
+  const [comment, setComment] = useState("");
+
+  useEffect(
+    () =>
+      onSnapshot(
+        query(
+          collection(db, "posts", id, "comments"),
+          orderBy("timestamp", "desc")
+        ),
+        (snapshot) => {
+          console.log(snapshot);
+          const post = snapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+          setComments(post);
+        }
+      ),
+    [db]
+  );
+
+  const sendComment = async (e) => {
+    e.preventDefault();
+    const commentToSend = comment;
+    setComment("");
+    await addDoc(collection(db, "posts", id, "comments"), {
+      comment: commentToSend,
+      username: session.user.username,
+      userImage: session.user.image,
+      tiemstamp: serverTimestamp(),
+    });
+  };
+
   return (
     <div className="bg-white my-7 border rounded-sm">
       {/* header */}
@@ -48,20 +95,39 @@ const Post = ({ img, userImg, username, caption }) => {
       </p>
 
       {/* comments */}
+      {/* {comments.length > 0 && (
+        <div>
+          {comments.map((a) => (
+            <div key={a.id} img={a.userImage} comment={a.comment}>
+              <img src={a.userImg} className="" />
+            </div>
+          ))}
+        </div>
+      )} */}
+
+      {/* input box */}
       {session && (
         <>
-          {/* input box */}
           <form className="flex items-center p-4">
             <EmojiHappyIcon className="h-7 " />
             <input
               type="text"
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
               className="border-none flex-1 focus:ring-0 outline-none"
               placeholder="Add a comment"
             />
-            <button className="font-semibold text-blue-400">Post</button>
+            <button
+              type="submit"
+              disabled={!comment.trim()}
+              onClick={sendComment}
+              className="font-semibold text-blue-400"
+            >
+              Post
+            </button>
           </form>
         </>
-       )}
+      )}
     </div>
   );
 };
