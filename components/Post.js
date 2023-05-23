@@ -22,6 +22,7 @@ import {
 } from "@firebase/firestore";
 import { db } from "@/firebase";
 import Comment from "./Comment";
+import Moment from "react-moment";
 
 const Post = ({ id, img, userImg, username, caption }) => {
   const { data: session } = useSession();
@@ -31,12 +32,9 @@ const Post = ({ id, img, userImg, username, caption }) => {
   useEffect(
     () =>
       onSnapshot(
-        query(
-          collection(db, "posts", id, "comments"),
-          orderBy("timestamp", "desc")
-        ),
+        collection(db, "posts", id, "comments"),
+        orderBy("timestamp", "desc"),
         (snapshot) => {
-          console.log(snapshot);
           const post = snapshot.docs.map((doc) => ({
             id: doc.id,
             ...doc.data(),
@@ -46,7 +44,7 @@ const Post = ({ id, img, userImg, username, caption }) => {
       ),
     [db]
   );
-
+  console.log(comments);
   const sendComment = async (e) => {
     e.preventDefault();
     const commentToSend = comment;
@@ -55,7 +53,7 @@ const Post = ({ id, img, userImg, username, caption }) => {
       comment: commentToSend,
       username: session.user.username,
       userImage: session.user.image,
-      tiemstamp: serverTimestamp(),
+      timestamp: serverTimestamp(),
     });
   };
 
@@ -95,15 +93,22 @@ const Post = ({ id, img, userImg, username, caption }) => {
       </p>
 
       {/* comments */}
-      {/* {comments.length > 0 && (
-        <div>
+      {comments.length > 0 && (
+        <div className="ml-10 h-20 overflow-y-scroll scrollbar-thin scrollbar-thumb-black">
           {comments.map((a) => (
-            <div key={a.id} img={a.userImage} comment={a.comment}>
-              <img src={a.userImg} className="" />
+            <div key={a.id} className=" flex items-center space-x-2 mb-2">
+              <img src={a.userImage} className="h-7 rounded-full" alt="" />
+              <p className="text-sm flex-1">
+                <span className="font-bold">{a.username}</span>
+                {"  "}
+                {a.comment}
+              </p>
+
+              <Moment fromNow className="pr-5 text-sm"> {a.tiemstamp && a.tiemstamp.toDate()} </Moment>
             </div>
           ))}
         </div>
-      )} */}
+      )}
 
       {/* input box */}
       {session && (
