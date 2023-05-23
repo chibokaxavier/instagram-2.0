@@ -62,8 +62,12 @@ const Header = () => {
         {/* right */}
         <div className="flex justify-end items-center space-x-4 ">
           <HomeIcon className="navBtn" onClick={() => router.push("/")} />
-          <button disabled={!session}> <PlusCircleIcon className="h-6 md:hidden cursor-pointer"   onClick={() => setOpen(!open)} /></button>
-         
+          {session && (
+            <PlusCircleIcon
+              className="h-6 md:hidden cursor-pointer"
+              onClick={() => setOpen(!open)}
+            />
+          )}
 
           {session ? (
             <>
