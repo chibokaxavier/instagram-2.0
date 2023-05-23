@@ -13,8 +13,10 @@ import {
   addDoc,
   collection,
   doc,
+  setDoc,
   getDoc,
   getDocs,
+  deleteDoc,
   onSnapshot,
   orderBy,
   query,
@@ -28,6 +30,8 @@ const Post = ({ id, img, userImg, username, caption }) => {
   const { data: session } = useSession();
   const [comments, setComments] = useState([]);
   const [comment, setComment] = useState("");
+  const [likes, setLikes] = useState([]);
+  const [hasLiked, setHasLiked] = useState(false);
 
   useEffect(
     () =>
@@ -42,9 +46,26 @@ const Post = ({ id, img, userImg, username, caption }) => {
           setComments(post);
         }
       ),
+    [db, id]
+  );
+  useEffect(
+    () =>
+      onSnapshot(collection(db, "posts", id, "likes"), (snapshot) => {
+        const post = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setLikes(post);
+      }),
     [db]
   );
-  console.log(comments);
+
+  useEffect(() => {
+    setHasLiked(
+      likes.findIndex((like) => like.id === session?.user?.uid) !== -1
+    );
+  }, [likes]);
+
   const sendComment = async (e) => {
     e.preventDefault();
     const commentToSend = comment;
@@ -55,6 +76,15 @@ const Post = ({ id, img, userImg, username, caption }) => {
       userImage: session.user.image,
       timestamp: serverTimestamp(),
     });
+  };
+  const likePost = async () => {
+    if (hasLiked) {
+      await deleteDoc(doc(db, "posts", id, "likes", session.user.uid));
+    } else {
+      await setDoc(doc(db, "posts", id, "likes", session.user.uid), {
+        username: session.user.username,
+      });
+    }
   };
 
   return (
@@ -76,7 +106,12 @@ const Post = ({ id, img, userImg, username, caption }) => {
       {session && (
         <div className="flex justify-between pt-4 px-4">
           <div className="flex space-x-4">
-            <HeartIcon className="btn" />
+            {hasLiked ? (
+              <HeartIconFilled onClick={likePost} className="btn text-red-500"/>
+            ) : (
+              <HeartIcon onClick={likePost} className="btn" />
+            )}
+
             <ChatIcon className="btn" />
             <div className="rotate-45">
               <PaperAirplaneIcon className="btn" />
@@ -88,6 +123,11 @@ const Post = ({ id, img, userImg, username, caption }) => {
 
       {/* caption */}
       <p className="truncate p-5">
+        {
+          likes.length > 0 && ( 
+            <p className="font-bold mb-1">{likes.length} like(s) </p>
+          )
+        }
         <span className="font-bold mr-1">{username}</span>
         {caption}
       </p>
@@ -104,7 +144,10 @@ const Post = ({ id, img, userImg, username, caption }) => {
                 {a.comment}
               </p>
 
-              <Moment fromNow className="pr-5 text-sm"> {a.tiemstamp && a.tiemstamp.toDate()} </Moment>
+              <Moment fromNow className="pr-5 text-sm">
+                {" "}
+                {a.tiemstamp && a.tiemstamp.toDate()}{" "}
+              </Moment>
             </div>
           ))}
         </div>
