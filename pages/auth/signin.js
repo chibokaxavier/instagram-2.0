@@ -1,10 +1,16 @@
 import React from "react";
 import { getProviders, signIn } from "next-auth/react";
 import Header from "@/components/Header";
+import Head from "next/head";
 
 const signin = ({ providers }) => {
   return (
     <div>
+      <Head>
+        <title>
+          Sign In Page
+        </title>
+      </Head>
       <Header />
       <div className="flex flex-col items-center justify-center min-h-screen py-2  -mt-[70px] px-14 text-center">
         <img className="w-80" src="https://links.papareact.com/ocw" />
